@@ -3,19 +3,28 @@ title: "First RMD File Activity"
 author: "David Bednarczyk"
 date: "`r Sys.Date()`"
 output:
+  html_document:
+    df_print: paged
   pdf_document:
     df_print: paged
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+options(error = recover)
 ```
 
 ```{r loadPackages}
 #Load packages with groundhog to improve stability
 library("groundhog")
-pkgs <- c("ggplot2", "tidyverse", "kableExtra")
-groundhog.library(pkgs, '2023-11-28')
+groundhog.library("ggplot2", '2023-11-28')
+groundhog.library("tidyverse", '2023-11-28')
+groundhog.library("conflicted", '2023-11-28')
+groundhog.library("kableExtra", '2023-11-28')
+conflict_prefer("filter", "dplyr")
+conflict_prefer("lag", "dplyr")
+
 ```
 
 The Collatz Conjecture is a famous mathematics problem that has famously never been solved. It asks whether repeating the same two operations will eventually turn every positive integer into 1. The Collatz Conjecture is expressed by the following functions:
@@ -110,6 +119,14 @@ In Phase 1, our STAT 184 class talked about the basics of R and fundamental conc
 In Phase 2, we moved past the very basic attributes of R and began discuss how we can use R to explore statistics. We talked about Exploratory Data Analysis and Confirmatory Data Analysis and the elementary perceptual tasks that we use to decipher data visualizations. We read about the different aspects of data visualizations according to Tufte and Kosslyn. Professor Hatfield introduced the PCIP system (Plan, Code, Improve, Polish) and we practiced it by creating our first data visualizations with ggplot2. We then moved into data wrangling using packages such as dplyr and explored how we can expand R with packages. Next, we learned how to create tables in R using the janitor, knitr, and kableExtra packages. We wrapped up Phase 2 by talking about Data Scraping with rvest.
 
 We are now in Phase 3 and are learning about R Markdown, putting an emphasis on communication and conveying ideas to others in an easy to understand way. We discussed YAML headers, inline code and code chunks, knitting, and debugging in RMD.
+
+# Github Link
+
+[DavidBednarczyk/Reproducible_RMD: This Repo was created for Activity #10 in STAT 184 Section 4 (github.com)](https://github.com/DavidBednarczyk/Reproducible_RMD)
+
+```{r Image}
+knitr::include_graphics("Reproducible_RMD.png", error = FALSE)
+```
 
 \newpage
 
