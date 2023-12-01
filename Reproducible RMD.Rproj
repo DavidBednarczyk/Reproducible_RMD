@@ -1,13 +1,115 @@
-Version: 1.0
+---
+title: "First RMD File Activity"
+author: "David Bednarczyk"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    df_print: paged
+---
 
-RestoreWorkspace: Default
-SaveWorkspace: Default
-AlwaysSaveHistory: Default
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(tidyverse)
+library(kableExtra)
+```
 
-EnableCodeIndexing: Yes
-UseSpacesForTab: Yes
-NumSpacesForTab: 2
-Encoding: UTF-8
+```{r loadPackages}
+#Load packages with groundhog to improve stability
+library("groundhog")
+pkgs <- c("ggplot2", "tidyverse", "kableExtra")
+groundhog.library(pkgs, '2023-11-28') #Use the date that you started the project here
+```
 
-RnwWeave: Sweave
-LaTeX: pdfLaTeX
+The Collatz Conjecture is a famous mathematics problem that has famously never been solved. It asks whether repeating the same two operations will eventually turn every positive integer into 1. The Collatz Conjecture is expressed by the following functions:
+
+If x is even: f(x) = x/2
+
+If x is odd: f(x) = 3x+1
+
+If x is 1: STOP
+
+"Stopping Numbers" represent the number of steps each positive integer has to take from its original value to 1. Professor Hatfield gave us a challenge: use a histogram to plot the first 10,000 stopping numbers of the Collatz Conjecture. The following is the described histogram:
+
+```{r Histogram}
+# The following code creates a function to show both the end value(1), and the Stopping Number
+run_collatz <- function(num, count = 0) {
+  if (num == 1) {
+    return(list(res = num, count = count))
+  } else if (num %% 2 == 0) {
+    num <- num / 2
+  } else {
+    num <- 3 * num + 1
+  }
+  
+  return(run_collatz(num, count + 1))
+}
+#This function just returns the Stopping Number
+get_stopping_num <- function(num) {
+  result <- run_collatz(num)
+  return(result$count)
+}
+#The following code creates a vector of starting numbers 1:10000
+starting_numbers <- 1:10000
+#The following creates a vector that houses the stopping numbers for integers 1:10000
+stopping_numbers <- sapply(starting_numbers, get_stopping_num)
+#The following turns the stopping numbers vector into a data frame that can be used to create a visualization
+stopping_frame <- data.frame(StoppingNumbers = stopping_numbers)
+#This ggplot code creates a histogram of the frequency of stopping numbers for the first 10000 integers
+ggplot(stopping_frame, aes(x = StoppingNumbers))+
+  geom_histogram(binwidth = 3)+
+  labs(title = "Frequency of Stopping Numbers for Integers 1:10000",
+       x= "Stopping Numbers",
+       y= "Frequency")+
+  theme_bw()
+```
+
+We can see that a majority of the inputs fell between 25 and 100. We also see a dip in frequency around 100, with a spike in frequency around stopping number 125. This shows the unpredictability of the stopping numbers. There are a small number of integers that have stopping numbers above 200. Though we cannot tell what integers give such high stopping number outputs, we can assume that there are integers between 1 and 10,000 that behave strangely within the constraints of the Collatz Conjecture.
+
+In Activity #5, we explored data visualizations using ggplot2. In Activity #7, we explored creating tables using dplyr and the kableExtra packages. In both of these activities, we used the diamonds data set found in the ggplot2 package. This diamonds data set houses information about \~54,000 diamonds including cut, price, carats, clarity, color, and size. In Activity #5, we were asked to create data visualizations that represent the relationship between two or more variables in the diamonds data set. The following scatter plot shows the relationship between price, cut, and carat of all \~54,000 diamonds.
+
+```{r diamondGraph}
+# The following code pipes the diamonds data plot into the ggplot function
+diamonds %>%
+# This ggplot code creates a scatter plot with carat on the x axis and price on the y axis, with clarity being represented by the color of the glyphs
+ggplot(aes(x = carat, y = price, color = clarity))+
+geom_point(size = 1)+
+labs(x = "Carat",
+y = "Price(U.S. Dollar)",
+title = "Diamond Price vs Carat and Clarity")+
+theme_gray()
+```
+
+The clarity scale goes from I1, the lowest quality to IF, the highest quality. As you can see, the higher quality diamonds reach the highest price values at lower carat values than lower quality diamonds. The entire right half of the graph displays low clarity diamonds with high carat values, but they still do not compare in price to the high clarity diamonds.
+
+```{r diamondTable}
+#The following code creates a table about price, grouped by cut, using the diamonds data set. It includes count, First and Third Quartiles , min and max, and SA mean and standard deviation
+diamondTable <- diamonds %>%
+group_by(clarity) %>%
+summarise(Count = n(),
+Minimum = min(price),
+FirstQ = quantile(price, .25),
+ThirdQ = quantile(price, .5),
+Median = median(price),
+Maximum = format(max(price), nsmall = 3),
+SA_Mean = format(mean(price), nsmall = 3),
+SA_Sd = sd(price)
+)
+#The following code pipes the diamondTable into the kable function and makes it more presentable by creating a caption and style
+diamondTable %>%
+kable(
+caption = "Statistics About the Price of Diamonds",
+booktabs = TRUE
+) %>%
+kable_styling(bootstrap_options = c("striped", "condensed"))
+```
+
+This table shows us some interesting things about the relationship between clarity and price. We can see that both the median and sample arithmetic mean for the two highest clarity diamonds are significantly lower than that of all lower clarity diamonds. The explanation for this is the carat values for these diamonds. Because higher clarity diamonds are less abundant than mediocre clarity diamonds, higher clarity diamonds weigh less than lesser clarity diamonds. This means that although the clarity is better, the diamond can weigh much less, causing it to cost much less.
+
+# Reflection
+
+In Phase 1, our STAT 184 class talked about the basics of R and fundamental concepts that would help us throughout the course. We started by discussing the layout of R, including the console, source, environments, packages, and places to find help with anything in R. We also discussed data structures and types. Activity #2 was all about planning out our code and creating meaningful names to objects. In Activity #3, we learned about vectors and logic functions. The next section of Phase 1 was about tidy data, creating data frames, and sub-setting data frames.
+
+In Phase 2, we moved past the very basic attributes of R and began discuss how we can use R to explore statistics. We talked about Exploratory Data Analysis and Confirmatory Data Analysis and the elementary perceptual tasks that we use to decipher data visualizations. We read about the different aspects of data visualizations according to Tufte and Kosslyn. Professor Hatfield introduced the PCIP system (Plan, Code, Improve, Polish) and we practiced it by creating our first data visualizations with ggplot2. We then moved into data wrangling using packages such as dplyr and explored how we can expand R with packages. Next, we learned how to create tables in R using the janitor, knitr, and kableExtra packages. We wrapped up Phase 2 by talking about Data Scraping with rvest.
+
+We are now in Phase 3 and are learning about R Markdown, putting an emphasis on communication and conveying ideas to others in an easy to understand way. We discussed YAML headers, inline code and code chunks, knitting, and debugging in RMD.
