@@ -5,9 +5,6 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     df_print: paged
-  pdf_document:
-    df_print: paged
-  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +12,7 @@ knitr::opts_chunk$set(echo = FALSE)
 options(error = recover)
 ```
 
-```{r loadPackages}
+```{r loadPackages, message = FALSE, warning= FALSE}
 #Load packages with groundhog to improve stability
 library("groundhog")
 groundhog.library("ggplot2", '2023-11-28')
@@ -26,6 +23,8 @@ conflict_prefer("filter", "dplyr")
 conflict_prefer("lag", "dplyr")
 
 ```
+
+# Collatz Conjecture
 
 The Collatz Conjecture is a famous mathematics problem that has famously never been solved. It asks whether repeating the same two operations will eventually turn every positive integer into 1. The Collatz Conjecture is expressed by the following functions:
 
@@ -71,6 +70,8 @@ ggplot(stopping_frame, aes(x = StoppingNumbers))+
 ```
 
 We can see that a majority of the inputs fell between 25 and 100. We also see a dip in frequency around 100, with a spike in frequency around stopping number 125. This shows the unpredictability of the stopping numbers. There are a small number of integers that have stopping numbers above 200. Though we cannot tell what integers give such high stopping number outputs, we can assume that there are integers between 1 and 10,000 that behave strangely within the constraints of the Collatz Conjecture.
+
+# Diamond Data
 
 In Activity #5, we explored data visualizations using ggplot2. In Activity #7, we explored creating tables using dplyr and the kableExtra packages. In both of these activities, we used the diamonds data set found in the ggplot2 package. This diamonds data set houses information about \~54,000 diamonds including cut, price, carats, clarity, color, and size. In Activity #5, we were asked to create data visualizations that represent the relationship between two or more variables in the diamonds data set. The following scatter plot shows the relationship between price, cut, and carat of all \~54,000 diamonds.
 
@@ -125,7 +126,7 @@ We are now in Phase 3 and are learning about R Markdown, putting an emphasis on 
 [DavidBednarczyk/Reproducible_RMD: This Repo was created for Activity #10 in STAT 184 Section 4 (github.com)](https://github.com/DavidBednarczyk/Reproducible_RMD)
 
 ```{r Image}
-knitr::include_graphics("Reproducible_RMD.png", error = FALSE)
+knitr::include_graphics("C:/Users/david/OneDrive/Documents/Fall2023-Stat184/Reproducible RMD/Reproducible RMD.png", error = FALSE)
 ```
 
 \newpage
